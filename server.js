@@ -25,4 +25,8 @@ app.get("/api/customers", (req, res) => {
     res.send(rows);
   });
 });
+
+// app.post("/api/customers", (req, res=>{
+//   connection.query(`INSERT INTO T_USER VALUES(`)
+// }))
 app.listen(port, () => console.log(`Listening on port ${port}`));

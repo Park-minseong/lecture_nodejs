@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import CircularStatic from "./components/CircularStatic";
+import AddUser from "./components/AddUser";
 
 function App() {
   const [data, setData] = useState([]);
@@ -27,6 +28,7 @@ function App() {
         maxWidth: "1200px",
       }}
     >
+      <AddUser></AddUser>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>이름</div>
         <div>전화번호</div>
