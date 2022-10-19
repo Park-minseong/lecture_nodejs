@@ -20,13 +20,30 @@ const connection = mysql.createConnection({
 }); //createConnection 연결 수행, connection 변수는 database.json의 내용을 커넥션에 적용하여 연결한 객체 초기화
 connection.connect(); // db연결
 
+const multer = require("multer"); //파일 업로드를 위한 multer객체 생성
+const upload = multer({ dest: "./upload" }); // upload폴더를 업로드 위치로 지정
+
 app.get("/api/customers", (req, res) => {
   connection.query("SELECT * FROM T_USER", (err, rows, fields) => {
     res.send(rows);
   });
 });
 
-// app.post("/api/customers", (req, res=>{
-//   connection.query(`INSERT INTO T_USER VALUES(`)
-// }))
+app.use("/images", express.static("./upload"));
+
+app.post("/api/customers", upload.single("profile"), (req, res) => {
+  //multer를 이용해 profile이라는 키값으로 날라온 파일을 업로드
+  let sql = `INSERT INTO T_USER VALUES(?,?,?,?)`;
+  let profile = "/images/" + req.file.filename; //요청으로 날라온 파일의 파일이름
+  let name = req.body.name;
+  let tel = req.body.tel;
+  let zip = req.body.zip;
+  let params = [name, tel, zip, profile];
+
+  connection.query(sql, params, (err, rows, field) => {
+    res.send(rows);
+    console.log(err);
+  });
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

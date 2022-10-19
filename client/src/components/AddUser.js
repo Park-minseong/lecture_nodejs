@@ -16,7 +16,7 @@ const AddUser = () => {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    setFile(e.target.value);
+    setFileName(e.target.value);
   };
 
   const addUser = () => {
@@ -25,10 +25,10 @@ const AddUser = () => {
     formData.append("name", name);
     formData.append("tel", tel);
     formData.append("zip", zip);
-    formData.append("porfile", file);
+    formData.append("profile", file);
     const config = {
       headers: {
-        "content-type": "multipart/form-data",
+        "Content-Type": "multipart/form-data",
       },
     };
 
@@ -41,9 +41,7 @@ const AddUser = () => {
         type="file"
         name="profile"
         file={file}
-        value={fileName}
         onChange={handleFileChange}
-        placeholder="프로필 사진"
       />
       <input
         type="text"
