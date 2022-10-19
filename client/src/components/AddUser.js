@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const AddUser = () => {
+  const [file, setFile] = useState("");
+  const [fileName, setFileName] = useState();
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
   const [zip, setZip] = useState("");
@@ -12,17 +14,37 @@ const AddUser = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFile(e.target.value);
+  };
+
   const addUser = () => {
     const url = "/api/customers";
     const formData = new FormData();
     formData.append("name", name);
     formData.append("tel", tel);
     formData.append("zip", zip);
-    return axios.post(url, formData);
+    formData.append("porfile", file);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    };
+
+    return axios.post(url, formData, config);
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <input
+        type="file"
+        name="profile"
+        file={file}
+        value={fileName}
+        onChange={handleFileChange}
+        placeholder="프로필 사진"
+      />
       <input
         type="text"
         name="name"
