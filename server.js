@@ -24,16 +24,19 @@ const multer = require("multer"); //파일 업로드를 위한 multer객체 생�
 const upload = multer({ dest: "./upload" }); // upload폴더를 업로드 위치로 지정
 
 app.get("/api/customers", (req, res) => {
-  connection.query("SELECT * FROM T_USER", (err, rows, fields) => {
-    res.send(rows);
-  });
+  connection.query(
+    "SELECT * FROM T_USER WHERE isDeleted = 0",
+    (err, rows, fields) => {
+      res.send(rows);
+    }
+  );
 });
 
 app.use("/images", express.static("./upload"));
 
 app.post("/api/customers", upload.single("profile"), (req, res) => {
   //multer를 이용해 profile이라는 키값으로 날라온 파일을 업로드
-  let sql = `INSERT INTO T_USER VALUES(?,?,?,?)`;
+  let sql = `INSERT INTO T_USER VALUES(null,?,?,?,?,now(),0)`;
   let profile = "/images/" + req.file.filename; //요청으로 날라온 파일의 파일이름
   let name = req.body.name;
   let tel = req.body.tel;
@@ -46,4 +49,11 @@ app.post("/api/customers", upload.single("profile"), (req, res) => {
   });
 });
 
+app.delete("/api/customers/:id", (req, res) => {
+  let sql = "UPDATE T_USER SET isDeleted = 1 WHERE USER_IDX = ?";
+  let params = [req.params.id];
+  connection.query(sql, params, (err, rows, field) => {
+    res.send(rows);
+  });
+});
 app.listen(port, () => console.log(`Listening on port ${port}`));

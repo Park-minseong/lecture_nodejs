@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const AddUser = () => {
-  const [file, setFile] = useState("");
-  const [fileName, setFileName] = useState();
+const AddUser = ({ refreshData }) => {
+  const [file, setFile] = useState();
+  const [filename, setFilename] = useState("");
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
   const [zip, setZip] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    addUser().then((response) => {
-      console.log(response.data);
+    addUser().then(() => {
+      refreshData();
+      setFile();
+      setName("");
+      setTel("");
+      setZip("");
+      setFilename("");
     });
   };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    setFileName(e.target.value);
+    setFilename(e.target.value);
   };
 
   const addUser = () => {
@@ -41,6 +46,7 @@ const AddUser = () => {
         type="file"
         name="profile"
         file={file}
+        value={filename}
         onChange={handleFileChange}
       />
       <input
